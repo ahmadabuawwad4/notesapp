@@ -1,0 +1,114 @@
+[
+  {
+    "ContainingType": "apis.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/Auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "application.DTOs.loginRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "NotesController",
+    "Method": "Create",
+    "RelativePath": "api/Note/AddNote",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "application.DTOs.CreateNoteDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "AddNote"
+  },
+  {
+    "ContainingType": "NotesController",
+    "Method": "Delete",
+    "RelativePath": "api/Note/DeleteNote",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "noteId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "DeleteNote"
+  },
+  {
+    "ContainingType": "NotesController",
+    "Method": "Update",
+    "RelativePath": "api/Note/EditNote",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "application.DTOs.UpdateNoteDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "EditNote"
+  },
+  {
+    "ContainingType": "NotesController",
+    "Method": "GetAll",
+    "RelativePath": "api/Note/GetAllNotes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [],
+    "EndpointName": "GetAllNotes"
+  },
+  {
+    "ContainingType": "NotesController",
+    "Method": "GetById",
+    "RelativePath": "api/Note/GetNote",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "noteId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "GetNote"
+  },
+  {
+    "ContainingType": "apis.Controllers.UserController",
+    "Method": "register",
+    "RelativePath": "api/User/Register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "newUser",
+        "Type": "application.DTOs.registrationUserDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "Register"
+  }
+]
