@@ -1,12 +1,273 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <script>
-      (window, (location.href = "./pages/login.html"));
-    </script>
     <meta charset="UTF-8" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title></title>
+
+    <meta
+      name="description"
+      content="Notes App - Create, organize, and manage your notes easily."
+    />
+
+    <title>Notes App - Organize Your Thoughts</title>
+
+    <link rel="stylesheet" href="./styles/index.css" />
   </head>
-  <body></body>
+
+  <body>
+    <!-- ==================== HEADER ==================== -->
+
+    <header class="site-header">
+      <div class="container header-container">
+        <a href="index.html" class="brand" aria-label="Notes App Home">
+          <span class="brand-icon" aria-hidden="true">
+            <span class="material-symbol">N</span>
+          </span>
+
+          <span class="brand-name">Notes App</span>
+        </a>
+
+        <nav class="main-nav" aria-label="Main navigation">
+          <a href="#features" class="nav-link"> Features </a>
+
+          <a href="./pages/login.html" class="nav-login"> Login </a>
+
+          <a href="./pages/register.html" class="btn btn-primary btn-small">
+            Get Started
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <!-- ==================== HERO ==================== -->
+
+      <section class="hero-section">
+        <div class="container hero-container">
+          <div class="hero-content">
+            <span class="hero-badge">
+              <span class="badge-dot"></span>
+              Simple. Organized. Yours.
+            </span>
+
+            <h1 class="hero-title">
+              Your thoughts,
+              <span>organized.</span>
+            </h1>
+
+            <p class="hero-description">
+              Capture your ideas, organize your notes, and keep everything you
+              need in one simple place.
+            </p>
+
+            <div class="hero-actions">
+              <a href="./pages/register.html" class="btn btn-primary">
+                Get Started
+                <span class="arrow" aria-hidden="true">→</span>
+              </a>
+
+              <a href="./pages/login.html" class="btn btn-secondary"> Login </a>
+            </div>
+
+            <p class="hero-note">
+              Create your account and start taking notes today.
+            </p>
+          </div>
+
+          <!-- Notes App Preview -->
+
+          <div class="hero-preview" aria-label="Notes App preview">
+            <div class="preview-window">
+              <div class="preview-header">
+                <div class="preview-brand">
+                  <div class="preview-logo">N</div>
+
+                  <span>Notes</span>
+                </div>
+
+                <div class="preview-user">
+                  <span></span>
+                </div>
+              </div>
+
+              <div class="preview-body">
+                <aside class="preview-sidebar">
+                  <div class="sidebar-item sidebar-item-active">
+                    <span class="sidebar-icon">▤</span>
+                    All Notes
+                  </div>
+
+                  <div class="sidebar-item">
+                    <span class="sidebar-icon">☆</span>
+                    Favorites
+                  </div>
+                </aside>
+
+                <div class="preview-content">
+                  <div class="preview-content-header">
+                    <div>
+                      <span class="preview-label"> MY NOTES </span>
+
+                      <h2>All Notes</h2>
+                    </div>
+
+                    <div class="preview-add">+</div>
+                  </div>
+
+                  <div class="note-preview-grid">
+                    <article class="note-card">
+                      <div class="note-card-top">
+                        <span class="note-category"> Personal </span>
+
+                        <span class="note-star"> ☆ </span>
+                      </div>
+
+                      <h3>Ideas for the weekend</h3>
+
+                      <p>Plan a few things to do, read a new book...</p>
+
+                      <span class="note-date"> Today </span>
+                    </article>
+
+                    <article class="note-card">
+                      <div class="note-card-top">
+                        <span class="note-category"> Work </span>
+
+                        <span class="note-star"> ★ </span>
+                      </div>
+
+                      <h3>Project ideas</h3>
+
+                      <p>Some ideas and tasks for the next project...</p>
+
+                      <span class="note-date"> Yesterday </span>
+                    </article>
+
+                    <article class="note-card note-card-small">
+                      <div class="note-card-top">
+                        <span class="note-category"> Personal </span>
+                      </div>
+
+                      <h3>Shopping list</h3>
+
+                      <p>Milk, coffee, bread...</p>
+                    </article>
+
+                    <article class="note-card note-card-small">
+                      <div class="note-card-top">
+                        <span class="note-category"> Work </span>
+                      </div>
+
+                      <h3>Meeting notes</h3>
+
+                      <p>Important points from today's meeting...</p>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== FEATURES ==================== -->
+
+      <section class="features-section" id="features">
+        <div class="container">
+          <div class="section-heading">
+            <span class="section-label"> WHY NOTES APP </span>
+
+            <h2>Everything you need to stay organized.</h2>
+
+            <p>
+              A simple note-taking experience designed to help you focus on what
+              matters.
+            </p>
+          </div>
+
+          <div class="features-grid">
+            <article class="feature-card">
+              <div class="feature-icon">+</div>
+
+              <h3>Capture ideas</h3>
+
+              <p>
+                Quickly create notes whenever inspiration strikes and keep your
+                thoughts in one place.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-icon">✓</div>
+
+              <h3>Stay organized</h3>
+
+              <p>
+                Keep your personal and work notes organized so you can find what
+                you need easily.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-icon">☆</div>
+
+              <h3>Keep what matters</h3>
+
+              <p>
+                Mark important notes and keep your most useful information easy
+                to access.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== CTA ==================== -->
+
+      <section class="cta-section">
+        <div class="container">
+          <div class="cta-card">
+            <div class="cta-content">
+              <span class="cta-label"> GET STARTED TODAY </span>
+
+              <h2>Your next idea starts here.</h2>
+
+              <p>
+                Create your free account and start organizing your thoughts in
+                seconds.
+              </p>
+
+              <a href="./pages/register.html" class="btn btn-white">
+                Create Your Account
+                <span class="arrow" aria-hidden="true"> → </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+
+    <footer class="site-footer">
+      <div class="container footer-container">
+        <div class="footer-brand">
+          <span class="brand-name"> Notes App </span>
+
+          <span class="footer-copy">
+            © 2026 Notes App. All rights reserved.
+          </span>
+        </div>
+
+        <div class="footer-links">
+          <a href="#features"> Features </a>
+
+          <a href="./pages/login.html"> Login </a>
+
+          <a href="./pages/register.html"> Register </a>
+        </div>
+      </div>
+    </footer>
+  </body>
 </html>

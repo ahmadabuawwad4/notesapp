@@ -1,0 +1,965 @@
+/* ================================================================
+   NOTES DASHBOARD
+   CSS3
+   ================================================================ */
+
+/* ================================================================
+   1. DESIGN TOKENS
+   ------------------------------------------------
+   Responsibility:
+   Store global colors, typography, spacing and dimensions.
+   ================================================================ */
+
+:root {
+  /* Colors */
+  --color-primary: #3525cd;
+  --color-primary-container: #4f46e5;
+  --color-on-primary: #ffffff;
+
+  --color-secondary: #565e74;
+  --color-secondary-container: #dae2fd;
+  --color-on-secondary-container: #5c647a;
+
+  --color-surface: #f8f9ff;
+  --color-surface-lowest: #ffffff;
+  --color-surface-low: #eff4ff;
+  --color-surface-container: #e5eeff;
+  --color-surface-high: #dce9ff;
+
+  --color-on-surface: #0b1c30;
+  --color-on-surface-variant: #464555;
+
+  --color-outline: #777587;
+  --color-outline-variant: #c7c4d8;
+
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+
+  /* Typography */
+  --font-body: "Inter", sans-serif;
+  --font-heading: "Plus Jakarta Sans", sans-serif;
+
+  --font-size-body-sm: 12px;
+  --font-size-body-md: 14px;
+
+  --font-size-label-sm: 11px;
+  --font-size-label-md: 13px;
+
+  --font-size-heading-sm: 18px;
+  --font-size-heading-lg: 30px;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+
+  --gutter: 1.5rem;
+
+  /* Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+
+  /* Layout */
+  --sidebar-width: 16rem;
+  --sidebar-collapsed-width: 4rem;
+
+  /* Effects */
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 1px 3px rgba(15, 23, 42, 0.05);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 200ms ease;
+}
+
+/* ================================================================
+   2. RESET / BASE
+   ------------------------------------------------
+   Responsibility:
+   Normalize browser defaults and establish global behavior.
+   ================================================================ */
+
+html {
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+
+  min-height: 100vh;
+
+  overflow-x: hidden;
+
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-md);
+  line-height: 1.5;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  overscroll-behavior: none;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ================================================================
+   3. SCROLLBAR
+   ------------------------------------------------
+   Responsibility:
+   Hide browser scrollbar while keeping scrolling functional.
+   ================================================================ */
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* ================================================================
+   4. UTILITY
+   ------------------------------------------------
+   Responsibility:
+   Generic state visibility only.
+   ================================================================ */
+
+.is-hidden {
+  display: none !important;
+}
+
+/* ================================================================
+   5. APPLICATION LAYOUT
+   ------------------------------------------------
+   Responsibility:
+   Define the main page structure.
+   ================================================================ */
+
+.app-layout {
+  min-height: 100vh;
+}
+
+.main-layout {
+  min-height: 100vh;
+  margin-left: var(--sidebar-collapsed-width);
+}
+
+/* ================================================================
+   6. SIDEBAR
+   ------------------------------------------------
+   Responsibility:
+   Sidebar positioning, dimensions and background.
+   ================================================================ */
+
+.sidebar {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  z-index: 50;
+
+  display: flex;
+  flex-direction: column;
+
+  width: var(--sidebar-collapsed-width);
+  height: 100vh;
+
+  padding: var(--space-md) 0;
+
+  border-right: 1px solid rgba(199, 196, 216, 0.4);
+
+  background-color: var(--color-surface-low);
+}
+
+/* ================================================================
+   7. SIDEBAR LOGO
+   ------------------------------------------------
+   Responsibility:
+   Logo alignment and typography.
+   ================================================================ */
+
+.sidebar__logo {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: var(--space-sm);
+
+  margin-bottom: var(--space-lg);
+
+  padding: 0 var(--space-sm);
+}
+
+.sidebar__logo-image {
+  display: block;
+
+  width: auto;
+  height: 2rem;
+
+  object-fit: contain;
+}
+
+.sidebar__logo-text {
+  display: none;
+
+  color: var(--color-on-surface);
+
+  font-family: var(--font-heading);
+  font-size: var(--font-size-heading-sm);
+  font-weight: 600;
+
+  letter-spacing: -0.02em;
+}
+
+/* ================================================================
+   8. SIDEBAR NAVIGATION
+   ------------------------------------------------
+   Responsibility:
+   Navigation layout and navigation item appearance.
+   ================================================================ */
+
+.sidebar__navigation {
+  display: flex;
+  flex: 1;
+
+  flex-direction: column;
+
+  gap: 0.25rem;
+
+  padding: 0 var(--space-sm);
+}
+
+.nav-item {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: var(--space-sm);
+
+  min-height: 2.5rem;
+
+  padding: 0.5rem;
+
+  border-radius: var(--radius-md);
+
+  color: var(--color-on-surface-variant);
+
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.nav-item:hover {
+  background-color: rgba(218, 226, 253, 0.8);
+}
+
+.nav-item--active {
+  background-color: var(--color-secondary-container);
+  color: var(--color-on-secondary-container);
+}
+
+.nav-item__icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.nav-item__label {
+  display: none;
+
+  font-size: var(--font-size-label-md);
+  font-weight: 500;
+}
+
+/* ================================================================
+   9. SIDEBAR FOOTER / LOGOUT
+   ------------------------------------------------
+   Responsibility:
+   Sidebar bottom action container.
+   ================================================================ */
+
+.sidebar__footer {
+  padding: var(--space-md) var(--space-sm) 0;
+}
+
+.logout-container {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: var(--space-xs);
+
+  border-radius: var(--radius-lg);
+
+  background-color: var(--color-surface-lowest);
+
+  box-shadow: var(--shadow-sm);
+}
+
+.icon-button {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 2.5rem;
+  height: 2.5rem;
+
+  padding: 0;
+
+  border-radius: var(--radius-md);
+
+  background-color: transparent;
+
+  color: var(--color-on-surface-variant);
+
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.icon-button--logout:hover {
+  background-color: var(--color-error-container);
+  color: var(--color-error);
+}
+
+/* ================================================================
+   10. MAIN CONTENT
+   ------------------------------------------------
+   Responsibility:
+   Main page spacing and width.
+   ================================================================ */
+
+.main-content {
+  width: 100%;
+  min-height: 100vh;
+
+  padding: 2rem 1rem;
+}
+
+.content-container {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  max-width: 80rem;
+
+  margin: 0 auto;
+
+  padding-bottom: var(--space-xl);
+}
+
+/* ================================================================
+   11. DASHBOARD HEADER
+   ------------------------------------------------
+   Responsibility:
+   Header layout and spacing.
+   ================================================================ */
+
+.dashboard-header {
+  display: flex;
+  flex-direction: column;
+
+  gap: var(--space-md);
+
+  margin-bottom: var(--space-lg);
+
+  padding-top: var(--space-md);
+}
+
+.dashboard-header__top {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: var(--space-md);
+}
+
+/* ================================================================
+   12. PAGE HEADING
+   ------------------------------------------------
+   Responsibility:
+   Dashboard title and description typography.
+   ================================================================ */
+
+.page-heading__title {
+  margin: 0;
+
+  color: var(--color-on-surface);
+
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  line-height: 1.25;
+  font-weight: 600;
+
+  letter-spacing: -0.02em;
+}
+
+.page-heading__description {
+  margin: 0.25rem 0 0;
+
+  color: var(--color-on-surface-variant);
+
+  font-size: var(--font-size-body-md);
+  line-height: 22px;
+  font-weight: 400;
+}
+
+/* ================================================================
+   13. BUTTONS
+   ------------------------------------------------
+   Responsibility:
+   Reusable button component.
+   ================================================================ */
+
+.button {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.5rem;
+
+  min-height: 2.5rem;
+
+  padding: 0.625rem 1rem;
+
+  border-radius: var(--radius-md);
+
+  font-family: var(--font-body);
+  font-size: var(--font-size-label-md);
+  font-weight: 500;
+
+  transition:
+    transform var(--transition-normal),
+    opacity var(--transition-normal),
+    box-shadow var(--transition-normal);
+}
+
+.button--primary {
+  background-color: var(--color-primary-container);
+  color: var(--color-on-primary);
+
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+}
+
+.button--primary:hover {
+  transform: translateY(-2px);
+  opacity: 0.95;
+
+  box-shadow: 0 4px 8px rgba(15, 23, 42, 0.12);
+}
+
+.button--primary:active {
+  transform: scale(0.98);
+}
+
+.button__icon {
+  font-size: 1.125rem;
+  line-height: 1;
+}
+
+/* ================================================================
+   14. FILTER
+   ------------------------------------------------
+   Responsibility:
+   Filter controls.
+   ================================================================ */
+
+.notes-filter {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  align-items: center;
+
+  gap: 0.5rem;
+
+  padding-top: 0.25rem;
+}
+
+.filter-button {
+  padding: 0.375rem 0.875rem;
+
+  border-radius: var(--radius-full);
+
+  background-color: transparent;
+
+  color: var(--color-on-surface-variant);
+
+  font-family: var(--font-body);
+  font-size: var(--font-size-label-sm);
+  font-weight: 500;
+}
+
+.filter-button--active {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+}
+
+/* ================================================================
+   15. STATE COMPONENT
+   ------------------------------------------------
+   Responsibility:
+   Shared state container behavior.
+   ================================================================ */
+
+.state {
+  width: 100%;
+}
+
+/* ================================================================
+   16. LOADING STATE
+   ------------------------------------------------
+   Responsibility:
+   Loading UI only.
+   ================================================================ */
+
+.state--loading {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 4rem 0;
+}
+
+.loading-content {
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.75rem;
+
+  color: var(--color-on-surface-variant);
+}
+
+.loading-message {
+  font-size: var(--font-size-body-md);
+}
+
+.loading-spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+
+  border: 2px solid rgba(53, 37, 205, 0.2);
+  border-top-color: var(--color-primary);
+
+  border-radius: 50%;
+
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================================================================
+   17. ERROR STATE
+   ------------------------------------------------
+   Responsibility:
+   Error message appearance.
+   ================================================================ */
+
+.state--error {
+  padding: 1rem;
+
+  border: 1px solid rgba(186, 26, 26, 0.2);
+
+  border-radius: var(--radius-lg);
+
+  background-color: var(--color-error-container);
+
+  color: var(--color-error);
+
+  overflow-wrap: break-word;
+}
+
+.error-message {
+  margin: 0;
+
+  font-size: var(--font-size-body-md);
+}
+
+/* ================================================================
+   18. NOTES GRID
+   ------------------------------------------------
+   Responsibility:
+   Notes collection layout only.
+   ================================================================ */
+
+.notes-grid {
+  display: grid;
+
+  grid-template-columns: 1fr;
+
+  gap: var(--space-md);
+}
+
+/* ================================================================
+   19. NOTE CARD
+   ------------------------------------------------
+   Responsibility:
+   Base styling for dynamically generated note cards.
+
+   JavaScript can generate cards using these classes without
+   changing the layout system.
+   ================================================================ */
+
+.note-card {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+
+  padding: var(--space-md);
+
+  border-radius: var(--radius-xl);
+
+  background-color: var(--color-surface-lowest);
+
+  box-shadow: var(--shadow-md);
+
+  transition:
+    transform var(--transition-normal),
+    box-shadow var(--transition-normal);
+}
+
+.note-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+}
+
+.note-card__header {
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: var(--space-sm);
+}
+
+.note-card__title {
+  margin: 0;
+
+  color: var(--color-on-surface);
+
+  font-family: var(--font-heading);
+  font-size: var(--font-size-heading-sm);
+  font-weight: 600;
+}
+
+.note-card__content {
+  margin-top: var(--space-sm);
+
+  color: var(--color-on-surface-variant);
+
+  font-size: var(--font-size-body-md);
+  line-height: 22px;
+
+  overflow-wrap: break-word;
+}
+
+.note-card__actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: var(--space-xs);
+}
+
+.note-card__action {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 2rem;
+  height: 2rem;
+
+  padding: 0;
+
+  border-radius: var(--radius-md);
+
+  background-color: transparent;
+
+  color: var(--color-on-surface-variant);
+}
+
+.note-card__action:hover {
+  background-color: var(--color-surface-low);
+}
+
+/* ================================================================
+   20. EMPTY STATE
+   ------------------------------------------------
+   Responsibility:
+   Empty notes screen only.
+   ================================================================ */
+
+.empty-state {
+  margin-top: var(--space-xl);
+
+  padding: 0.75rem;
+
+  border-radius: var(--radius-xl);
+
+  background-color: var(--color-surface-lowest);
+
+  box-shadow: var(--shadow-md);
+}
+
+.empty-state__content {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 3rem 1rem;
+
+  border-radius: var(--radius-lg);
+
+  background-color: var(--color-surface-low);
+
+  text-align: center;
+}
+
+/* ================================================================
+   21. EMPTY STATE ILLUSTRATION
+   ------------------------------------------------
+   Responsibility:
+   Empty state illustration only.
+   ================================================================ */
+
+.empty-state__illustration {
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 6rem;
+  height: 6rem;
+
+  margin-bottom: var(--space-md);
+}
+
+.empty-state__illustration-background {
+  position: absolute;
+
+  inset: 0;
+
+  border-radius: 1.5rem;
+
+  background-color: rgba(53, 37, 205, 0.1);
+
+  transform: rotate(-6deg);
+}
+
+.empty-state__illustration-icon {
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 5rem;
+  height: 5rem;
+
+  padding: 0.75rem;
+
+  border-radius: var(--radius-xl);
+
+  background-color: var(--color-primary-container);
+
+  color: var(--color-on-primary);
+
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
+}
+
+.empty-state__svg {
+  width: 3rem;
+  height: 3rem;
+}
+
+/* ================================================================
+   22. EMPTY STATE TYPOGRAPHY
+   ------------------------------------------------
+   Responsibility:
+   Empty state text only.
+   ================================================================ */
+
+.empty-state__title {
+  margin: 0 0 0.25rem;
+
+  color: var(--color-on-surface);
+
+  font-family: var(--font-heading);
+  font-size: var(--font-size-heading-sm);
+  line-height: 24px;
+  font-weight: 600;
+}
+
+.empty-state__description {
+  max-width: 24rem;
+
+  margin: 0 0 var(--space-md);
+
+  padding: 0 0.25rem;
+
+  color: var(--color-on-surface-variant);
+
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-md);
+  line-height: 22px;
+}
+
+/* ================================================================
+   23. RESPONSIVE - TABLET / DESKTOP
+   ================================================================ */
+
+@media (min-width: 768px) {
+  .sidebar {
+    width: var(--sidebar-width);
+  }
+
+  .main-layout {
+    margin-left: var(--sidebar-width);
+  }
+
+  .sidebar__logo {
+    justify-content: flex-start;
+    padding: 0 var(--space-md);
+  }
+
+  .sidebar__logo-text {
+    display: inline;
+  }
+
+  .sidebar__navigation {
+    padding: 0 var(--space-md);
+  }
+
+  .nav-item {
+    justify-content: flex-start;
+  }
+
+  .nav-item__label {
+    display: inline;
+  }
+
+  .sidebar__footer {
+    padding-right: var(--space-md);
+    padding-left: var(--space-md);
+  }
+
+  .logout-container {
+    justify-content: flex-start;
+  }
+
+  .main-content {
+    padding: 2.5rem 1.5rem;
+  }
+
+  .notes-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .empty-state__content {
+    padding: var(--space-lg) var(--space-md);
+  }
+}
+
+/* ================================================================
+   24. RESPONSIVE - LARGE DESKTOP
+   ================================================================ */
+
+@media (min-width: 1024px) {
+  .main-content {
+    padding: 3rem var(--gutter);
+  }
+
+  .notes-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .page-heading__title {
+    font-size: var(--font-size-heading-lg);
+    line-height: 38px;
+  }
+}
+
+/* ================================================================
+   25. RESPONSIVE - SMALL MOBILE
+   ================================================================ */
+
+@media (max-width: 480px) {
+  .dashboard-header__top {
+    align-items: stretch;
+  }
+
+  .page-heading {
+    width: 100%;
+  }
+
+  .button--primary {
+    width: 100%;
+  }
+
+  .empty-state {
+    margin-top: var(--space-lg);
+  }
+
+  .empty-state__content {
+    padding: 2.5rem 1rem;
+  }
+}

@@ -2,8 +2,6 @@ const domain = "http://notesapp.tryasp.net";
 const endpoint = "/api/Auth/login";
 
 export async function Login(email, password) {
-  let result = "";
-
   const url = new URL(endpoint, domain);
 
   try {
@@ -22,13 +20,20 @@ export async function Login(email, password) {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+      return false;
     }
 
-    result = await response.json();
-  } catch (error) {
-    result = `Failed: ${error.message}`;
-  }
+    const result = await response.json();
 
-  return result;
+    if (!result.token) {
+      return false;
+    }
+
+    sessionStorage.setItem("token", result.token);
+
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
 }

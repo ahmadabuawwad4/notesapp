@@ -1,20 +1,36 @@
-import { addNote,loadNote,editNote } from "../services/noteServices.js";
+import { addNote, loadNote, editNote } from "../services/noteServices.js";
+
+// ==========================================
+// DOM Elements
+// ==========================================
+
+const form = document.getElementById("noteEditorForm");
 
 const editor = document.getElementById("editorContent");
+const noteTitle = document.getElementById("noteTitle");
+
 const topSave = document.getElementById("topSaveBtn");
 const bottomSave = document.getElementById("bottomSaveBtn");
+
 const discard = document.getElementById("discardBtn");
-const noteTitle = document.getElementById("noteTitle");
 const cancelBtn = document.getElementById("cancelActionBtn");
+
 const message = document.getElementById("message");
-let mode;
-let Id;
 
+// ==========================================
+// State
+// ==========================================
 
-const handleExplicitSave = async (event) => {
+let mode = "new";
+let noteId = null;
+
+// ==========================================
+// Save Note
+// ==========================================
+
+async function handleSave(event) {
   event.preventDefault();
 
-  
   const title = noteTitle.value.trim();
   const content = editor.value.trim();
 
@@ -25,88 +41,143 @@ const handleExplicitSave = async (event) => {
 
   try {
     let result;
-    if(mode==="new"){
-       result = await addNote({
-        Title: title,
-        Content: content,
-        IsPinned: false,
-        IsArchived: false,
-      });
-    
-    }
-    else if(mode==="edit"){
-      
-      result = await editNote({
-        noteId: Id,
-        Title: title,
-        Content: content,
-        IsPinned: false,
-        IsArchived: false,
-      });
-    }
-    
 
-    console.log(result);
+    if (mode === "new") {
+      result = await addNote({
+        Title: title,
+        Content: content,
+        IsPinned: false,
+        IsArchived: false,
+      });
+    }
+
+    if (mode === "edit") {
+      result = await editNote({
+        noteId: noteId,
+        Title: title,
+        Content: content,
+        IsPinned: false,
+        IsArchived: false,
+      });
+    }
 
     if (result === true) {
-      mode === "new"?showMessage("Note added successfully.", "success"):
-      showMessage("Note edited successfully.", "success");
+      const successMessage =
+        mode === "new"
+          ? "Note added successfully."
+          : "Note edited successfully.";
+
+      showMessage(successMessage, "success");
 
       setTimeout(() => {
         window.location.href = "./dashboard.html";
       }, 800);
-    } else {
-      mode === "new"?showMessage("Failed to add note.", "error"):
-      showMessage("Failed to edit note.", "error");
-      
+
+      return;
     }
+
+    const errorMessage =
+      mode === "new" ? "Failed to add note." : "Failed to edit note.";
+
+    showMessage(errorMessage, "error");
   } catch (error) {
     console.error(error);
 
     showMessage("Something went wrong. Please try again.", "error");
   }
-};
-topSave.addEventListener("click", handleExplicitSave);
-bottomSave.addEventListener("click", handleExplicitSave);
-
-discard.addEventListener("click", () => {
-  if (confirm("Are you sure you want to delete this note?")) {
-  }
-});
-
-function showMessage(text, type) {
-  message.textContent = text;
-  message.className = `message ${type}`;
-  message.style.display = "block";
 }
 
-cancelBtn.addEventListener("click", function () {
+// ==========================================
+// Delete Note
+// ==========================================
+
+async function handleDelete() {
+  if (mode !== "edit") {
+    return;
+  }
+
+  const confirmed = confirm("Are you sure you want to delete this note?");
+
+  if (!confirmed) {
+    return;
+  }
+
+  // Add deleteNote() here when needed.
+}
+
+// ==========================================
+// Cancel
+// ==========================================
+
+function handleCancel() {
   window.location.href = "./dashboard.html";
+}
+
+// ==========================================
+// Message
+// ==========================================
+
+function showMessage(text, type = "") {
+  message.textContent = text;
+  message.dataset.type = type;
+}
+
+// ==========================================
+// Load Note
+// ==========================================
+
+async function loadCurrentNote() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+
+  // New Note
+  if (id === null) {
+    mode = "new";
+
+    showMessage("Add new note");
+
+    return;
+  }
+
+  // Edit Note
+  mode = "edit";
+  noteId = id;
+
+  try {
+    const note = await loadNote(id);
+
+    if (!note) {
+      showMessage("Note not found.", "error");
+      return;
+    }
+
+    noteTitle.value = note.title ?? "";
+    editor.value = note.content ?? "";
+
+    showMessage("Editing Note");
+  } catch (error) {
+    console.error(error);
+
+    showMessage("Failed to load note.", "error");
+  }
+}
+
+// ==========================================
+// Events
+// ==========================================
+
+form.addEventListener("submit", handleSave);
+
+topSave.addEventListener("click", () => {
+  form.requestSubmit();
 });
 
+discard.addEventListener("click", handleDelete);
 
+cancelBtn.addEventListener("click", handleCancel);
 
+// ==========================================
+// Initialize
+// ==========================================
 
-
-(async function LoadNote(){
-  const params = new URLSearchParams(window.location.search);
-  const noteId = params.get("id");
-  if(noteId === null){
-    mode = "new";
-    showMessage("Add new note..");
-
-  }
-  else{
-    mode = "edit";
-    const note = await loadNote(noteId);
-
-    Id = noteId;
-    noteTitle.value = note["title"] ?? "Untitled Note";
-    editor.value = note["content"] ?? "";
-  }
-  
-
-})();
-
-
-
+loadCurrentNote();

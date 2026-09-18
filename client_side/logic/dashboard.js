@@ -1,153 +1,160 @@
-import { loadNotes,deleteNote } from "../services/noteServices.js";
-
-let notes = [];
-
-const notesGrid = document.getElementById("notesGrid");
-const notesCount = document.getElementById("notesCount");
-const loadingState = document.getElementById("loadingState");
-const errorState = document.getElementById("errorState");
-const emptyState = document.getElementById("emptyState");
+import { loadNotes, deleteNote } from "../services/noteServices.js";
 
 
-// ===============================
-// Load Notes
-// ===============================
+// ================================================================
+// STATE
+// ================================================================
+
+const state = {
+    notes: [],
+    filteredNotes: [],
+    searchTerm: "",
+    isLoading: false,
+    hasError: false
+};
+
+
+// ================================================================
+// DOM ELEMENTS
+// ================================================================
+
+const elements = {
+    notesGrid: document.getElementById("notesGrid"),
+    notesCount: document.getElementById("notesCount"),
+
+    loadingState: document.getElementById("loadingState"),
+    errorState: document.getElementById("errorState"),
+    emptyState: document.getElementById("emptyState"),
+
+    searchInput: document.getElementById("searchInput"),
+
+    newNoteButton: document.getElementById("newNoteButton"),
+    emptyStateCreateButton: document.getElementById(
+        "emptyStateCreateButton"
+    ),
+
+    logoutButton: document.getElementById("logoutButton")
+};
+
+
+// ================================================================
+// INITIALIZATION
+// ================================================================
+
+async function initializeDashboard() {
+
+    setupEvents();
+
+    await getNotes();
+}
+
+
+// ================================================================
+// LOAD NOTES
+// ================================================================
 
 async function getNotes() {
 
-    try {
+    setLoadingState(true);
 
-        showLoading();
+    try {
 
         const result = await loadNotes();
 
         console.log("API Result:", result);
 
-        // Check API response
         if (!Array.isArray(result)) {
 
-            console.error(result);
+            console.error("Invalid API response:", result);
 
             showError();
 
             return;
         }
 
-        notes = result;
-        
-        displayNotes(notes);
+        state.notes = result;
+        state.filteredNotes = result;
+
+        renderNotes();
 
     } catch (error) {
 
         console.error("Failed to load notes:", error);
 
         showError();
+
+    } finally {
+
+        setLoadingState(false);
     }
 }
 
 
-// ===============================
-// Display Notes
-// ===============================
+// ================================================================
+// RENDER NOTES
+// ================================================================
 
-function displayNotes(notesToDisplay) {
+function renderNotes() {
 
-    hideLoading();
+    const notes = state.filteredNotes;
 
-    notesGrid.innerHTML = "";
+    clearNotesGrid();
 
-    notesCount.textContent = notesToDisplay.length;
+    updateNotesCount(notes.length);
 
-    // No notes
-    if (notesToDisplay.length === 0) {
+    if (notes.length === 0) {
 
-        notesGrid.classList.add("hidden");
-
-        emptyState.classList.remove("hidden");
+        showEmptyState();
 
         return;
     }
 
-    // Notes exist
-    notesGrid.classList.remove("hidden");
+    showNotesGrid();
 
-    emptyState.classList.add("hidden");
-
-    notesToDisplay.forEach(note => {
+    notes.forEach(note => {
 
         const card = createNoteCard(note);
-        notesGrid.appendChild(card);
-    });
 
+        elements.notesGrid.appendChild(card);
+    });
 }
 
 
-// ===============================
-// Create Note Card
-// ===============================
+// ================================================================
+// CREATE NOTE CARD
+// ================================================================
 
 function createNoteCard(note) {
 
     const card = document.createElement("article");
 
-    card.className = `
-        group
-        flex
-        cursor-pointer
-        flex-col
-        rounded-xl
-        bg-surface-container-lowest
-        p-space-md
-        shadow-[0_1px_3px_0_rgba(15,23,42,0.05)]
-        transition-all
-        hover:-translate-y-1
-        hover:shadow-lg
-    `;
+    card.className = "note-card";
 
-
-    const noteId = note.noteId;
+    card.dataset.noteId = note.noteId;
 
     const title = note.title ?? "Untitled Note";
-
     const content = note.content ?? "";
-
     const updatedAt = note.updatedAt;
-
 
     card.innerHTML = `
 
-        <!-- Card Header -->
+        <div class="note-card__header">
 
-        <div class="mb-3 flex items-start justify-between gap-3">
-
-            <h2
-                class="
-                    line-clamp-2
-                    font-headline
-                    text-headline-sm
-                    text-on-surface
-                "
-            >
+            <h2 class="note-card__title">
                 ${escapeHtml(title)}
             </h2>
 
-
-            <div class="flex shrink-0 items-center gap-1">
+            <div class="note-card__actions">
 
                 <button
                     type="button"
-                    class="
-                        rounded-full
-                        p-1.5
-                        text-on-surface-variant
-                        transition-colors
-                        hover:bg-surface-container-high
-                    "
+                    class="note-card__action"
                     title="Favorite"
+                    aria-label="Favorite note"
                     data-action="favorite"
                 >
 
-                    <span class="material-symbols-outlined text-lg">
+                    <span class="material-symbols-outlined">
                         star
                     </span>
 
@@ -156,18 +163,13 @@ function createNoteCard(note) {
 
                 <button
                     type="button"
-                    class="
-                        rounded-full
-                        p-1.5
-                        text-on-surface-variant
-                        transition-colors
-                        hover:bg-surface-container-high
-                    "
+                    class="note-card__action"
                     title="Edit"
+                    aria-label="Edit note"
                     data-action="edit"
                 >
 
-                    <span class="material-symbols-outlined text-lg">
+                    <span class="material-symbols-outlined">
                         edit
                     </span>
 
@@ -176,19 +178,13 @@ function createNoteCard(note) {
 
                 <button
                     type="button"
-                    class="
-                        rounded-full
-                        p-1.5
-                        text-on-surface-variant
-                        transition-colors
-                        hover:bg-error-container
-                        hover:text-error
-                    "
+                    class="note-card__action note-card__action--delete"
                     title="Delete"
+                    aria-label="Delete note"
                     data-action="delete"
                 >
 
-                    <span class="material-symbols-outlined text-lg">
+                    <span class="material-symbols-outlined">
                         delete
                     </span>
 
@@ -199,296 +195,474 @@ function createNoteCard(note) {
         </div>
 
 
-        <!-- Content -->
-
-        <p
-            class="
-                mb-5
-                line-clamp-4
-                flex-1
-                text-body-md
-                leading-relaxed
-                text-on-surface-variant
-            "
-        >
+        <p class="note-card__content">
             ${escapeHtml(content)}
         </p>
 
 
-        <!-- Footer -->
+        <div class="note-card__footer">
 
-        <div class="mt-auto">
-
-            <p class="text-label-sm text-on-surface-variant">
-
+            <p class="note-card__date">
                 Updated ${formatDate(updatedAt)}
-
             </p>
 
         </div>
-
     `;
-
-
-    // ==========================
-    // Card Events
-    // ==========================
-
-    const editButton = card.querySelector('[data-action="edit"]');
-
-    const deleteButton = card.querySelector('[data-action="delete"]');
-
-    const favoriteButton = card.querySelector('[data-action="favorite"]');
-
-
-    editButton.addEventListener("click", function (event) {
-
-        event.stopPropagation();
-
-        editNote(noteId);
-
-    });
-
-
-    deleteButton.addEventListener("click", function (event) {
-
-        event.stopPropagation();
-
-        handleDeleteNote(noteId);
-
-    });
-
-
-    favoriteButton.addEventListener("click", function (event) {
-
-        event.stopPropagation();
-
-        favoriteNote(noteId);
-
-    });
-
-
-    // Clicking the card opens the note
-    card.addEventListener("click", function () {
-
-        editNote(noteId);
-
-    });
-
 
     return card;
 }
 
 
-// ===============================
-// Search
-// ===============================
+// ================================================================
+// NOTES GRID EVENTS
+// ------------------------------------------------
+// Event Delegation
+// ================================================================
 
-const searchInput = document.getElementById("searchInput");
+function handleNoteGridClick(event) {
 
-if (searchInput) {
+    const actionButton = event.target.closest("[data-action]");
+    const noteCard = event.target.closest(".note-card");
 
-    searchInput.addEventListener("input", function () {
+    if (!noteCard) {
+        return;
+    }
 
-        const searchValue = this.value.toLowerCase().trim();
+    const noteId = Number(noteCard.dataset.noteId);
+
+    if (!noteId) {
+        return;
+    }
 
 
-        const filteredNotes = notes.filter(note => {
+    // ------------------------------------------------------------
+    // Action Button
+    // ------------------------------------------------------------
 
-            const title = (note.title ?? "").toLowerCase();
+    if (actionButton) {
 
-            const content = (note.content ?? "").toLowerCase();
+        event.stopPropagation();
+
+        const action = actionButton.dataset.action;
+
+        handleNoteAction(action, noteId);
+
+        return;
+    }
 
 
-            return (
-                title.includes(searchValue) ||
-                content.includes(searchValue)
+    // ------------------------------------------------------------
+    // Card Click
+    // ------------------------------------------------------------
+
+    editNote(noteId);
+}
+
+
+// ================================================================
+// NOTE ACTIONS
+// ================================================================
+
+async function handleNoteAction(action, noteId) {
+
+    switch (action) {
+
+        case "edit":
+
+            editNote(noteId);
+
+            break;
+
+
+        case "delete":
+
+            await handleDeleteNote(noteId);
+
+            break;
+
+
+        case "favorite":
+
+            favoriteNote(noteId);
+
+            break;
+
+
+        default:
+
+            console.warn(
+                `Unknown note action: ${action}`
             );
+    }
+}
 
-        });
+
+// ================================================================
+// SEARCH
+// ================================================================
+
+function handleSearch(event) {
+
+    const searchTerm = event.target.value
+        .toLowerCase()
+        .trim();
+
+    state.searchTerm = searchTerm;
+
+    state.filteredNotes = filterNotes(
+        state.notes,
+        searchTerm
+    );
+
+    renderNotes();
+}
 
 
-        displayNotes(filteredNotes);
+// ================================================================
+// FILTER NOTES
+// ================================================================
 
+function filterNotes(notes, searchTerm) {
+
+    if (!searchTerm) {
+
+        return notes;
+    }
+
+    return notes.filter(note => {
+
+        const title = String(
+            note.title ?? ""
+        ).toLowerCase();
+
+        const content = String(
+            note.content ?? ""
+        ).toLowerCase();
+
+        return (
+            title.includes(searchTerm) ||
+            content.includes(searchTerm)
+        );
     });
-
 }
 
 
-// ===============================
-// New Note
-// ===============================
+// ================================================================
+// CREATE NOTE
+// ================================================================
 
-const newNoteButton = document.getElementById("newNoteButton");
+function navigateToCreateNote() {
 
-if (newNoteButton) {
-
-    newNoteButton.addEventListener("click", function () {
-
-        window.location.href = "./note-editor.html";
-
-    });
-
+    window.location.href = "./note-editor.html";
 }
 
 
-// ===============================
-// Empty State - Create Note
-// ===============================
+// ================================================================
+// EDIT NOTE
+// ================================================================
 
-const emptyStateCreateButton =
-    document.getElementById("emptyStateCreateButton");
+function editNote(noteId) {
 
-
-if (emptyStateCreateButton) {
-
-    emptyStateCreateButton.addEventListener("click", function () {
-
-        window.location.href = "./note-editor.html";
-
-    });
-
+    window.location.href =
+        `./note-editor.html?id=${noteId}`;
 }
 
 
-// ===============================
-// Logout
-// ===============================
+// ================================================================
+// DELETE NOTE
+// ================================================================
 
-const logoutButton =
-    document.getElementById("logoutButton");
-
-
-if (logoutButton) {
-
-    logoutButton.addEventListener("click", function () {
-
-        sessionStorage.removeItem("token");
-
-        window.location.href = "./login.html";
-
-    });
-
-}
-
-
-// ===============================
-// Edit Note
-// ===============================
-
-function editNote(id) {
-
-    window.location.href = `./note-editor.html?id=${id}`;
-
-}
-
-
-// ===============================
-// Delete Note
-// ===============================
-
-async function handleDeleteNote(id) {
+async function handleDeleteNote(noteId) {
 
     const confirmed = confirm(
         "Are you sure you want to delete this note?"
     );
 
-
     if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        const result = await deleteNote(noteId);
+
+        console.log("Delete result:", result);
+
+        if (!result) {
+
+            console.error(
+                "Failed to delete note:",
+                result
+            );
+
+            return;
+        }
+
+
+        // --------------------------------------------------------
+        // Remove note from local state
+        // --------------------------------------------------------
+
+        state.notes = state.notes.filter(
+            note => note.noteId !== noteId
+        );
+
+
+        // --------------------------------------------------------
+        // Apply current search again
+        // --------------------------------------------------------
+
+        state.filteredNotes = filterNotes(
+            state.notes,
+            state.searchTerm
+        );
+
+
+        // --------------------------------------------------------
+        // Update UI
+        // --------------------------------------------------------
+
+        renderNotes();
+
+    } catch (error) {
+
+        console.error(
+            "Failed to delete note:",
+            error
+        );
+    }
+}
+
+
+// ================================================================
+// FAVORITE NOTE
+// ================================================================
+
+function favoriteNote(noteId) {
+
+    console.log("Favorite note:", noteId);
+
+    // Favorite API will be implemented later.
+}
+
+
+// ================================================================
+// LOGOUT
+// ================================================================
+
+function logout() {
+
+    sessionStorage.removeItem("token");
+
+    window.location.href = "./login.html";
+}
+
+
+// ================================================================
+// UI STATE
+// ================================================================
+
+function setLoadingState(isLoading) {
+
+    state.isLoading = isLoading;
+
+    if (isLoading) {
+
+        showLoading();
 
         return;
     }
-    console.log(id);
 
-    const result = await deleteNote(id);
-
-    if (result) {
-        location.reload();
-    } else {
-        console.error("Failed to delete note:", result);
-    }
-
+    hideLoading();
 }
 
 
-// ===============================
-// Favorite Note
-// ===============================
-
-function favoriteNote(id) {
-
-    console.log("Favorite note:", id);
-
-    // سيتم إضافة Favorite API لاحقاً
-}
-
-
-// ===============================
-// Loading
-// ===============================
+// ================================================================
+// SHOW LOADING
+// ================================================================
 
 function showLoading() {
 
-    loadingState.classList.remove("hidden");
+    elements.loadingState.classList.remove("is-hidden");
 
-    errorState.classList.add("hidden");
-
-    notesGrid.classList.add("hidden");
-
-    emptyState.classList.add("hidden");
-
+    elements.errorState.classList.add("is-hidden");
+    elements.notesGrid.classList.add("is-hidden");
+    elements.emptyState.classList.add("is-hidden");
 }
 
 
-// ===============================
-// Hide Loading
-// ===============================
+// ================================================================
+// HIDE LOADING
+// ================================================================
 
 function hideLoading() {
 
-    loadingState.classList.add("hidden");
-
+    elements.loadingState.classList.add("is-hidden");
 }
 
 
-// ===============================
-// Error
-// ===============================
+// ================================================================
+// SHOW NOTES GRID
+// ================================================================
+
+function showNotesGrid() {
+
+    elements.notesGrid.classList.remove("is-hidden");
+
+    elements.emptyState.classList.add("is-hidden");
+    elements.errorState.classList.add("is-hidden");
+}
+
+
+// ================================================================
+// SHOW EMPTY STATE
+// ================================================================
+
+function showEmptyState() {
+
+    elements.notesGrid.classList.add("is-hidden");
+
+    elements.emptyState.classList.remove("is-hidden");
+
+    elements.errorState.classList.add("is-hidden");
+}
+
+
+// ================================================================
+// SHOW ERROR
+// ================================================================
 
 function showError() {
 
-    loadingState.classList.add("hidden");
+    state.hasError = true;
 
-    notesGrid.classList.add("hidden");
+    elements.loadingState.classList.add("is-hidden");
+    elements.notesGrid.classList.add("is-hidden");
+    elements.emptyState.classList.add("is-hidden");
 
-    emptyState.classList.add("hidden");
-
-    errorState.classList.remove("hidden");
-
+    elements.errorState.classList.remove("is-hidden");
 }
 
 
-// ===============================
-// Format Date
-// ===============================
+// ================================================================
+// CLEAR NOTES
+// ================================================================
+
+function clearNotesGrid() {
+
+    elements.notesGrid.innerHTML = "";
+}
+
+
+// ================================================================
+// UPDATE NOTES COUNT
+// ================================================================
+
+function updateNotesCount(count) {
+
+    elements.notesCount.textContent = count;
+}
+
+
+// ================================================================
+// SETUP EVENTS
+// ================================================================
+
+function setupEvents() {
+
+
+    // ------------------------------------------------------------
+    // Notes Grid
+    // ------------------------------------------------------------
+
+    if (elements.notesGrid) {
+
+        elements.notesGrid.addEventListener(
+            "click",
+            handleNoteGridClick
+        );
+    }
+
+
+    // ------------------------------------------------------------
+    // Search
+    // ------------------------------------------------------------
+
+    if (elements.searchInput) {
+
+        elements.searchInput.addEventListener(
+            "input",
+            handleSearch
+        );
+    }
+
+
+    // ------------------------------------------------------------
+    // New Note
+    // ------------------------------------------------------------
+
+    if (elements.newNoteButton) {
+
+        elements.newNoteButton.addEventListener(
+            "click",
+            navigateToCreateNote
+        );
+    }
+
+
+    // ------------------------------------------------------------
+    // Empty State
+    // ------------------------------------------------------------
+
+    if (elements.emptyStateCreateButton) {
+
+        elements.emptyStateCreateButton.addEventListener(
+            "click",
+            navigateToCreateNote
+        );
+    }
+
+
+    // ------------------------------------------------------------
+    // Logout
+    // ------------------------------------------------------------
+
+    if (elements.logoutButton) {
+
+        elements.logoutButton.addEventListener(
+            "click",
+            logout
+        );
+    }
+}
+
+
+// ================================================================
+// FORMAT DATE
+// ================================================================
 
 function formatDate(date) {
 
     if (!date) {
-
         return "";
-
     }
 
+    const parsedDate = new Date(date);
 
-    return new Date(date).toLocaleDateString();
+    if (Number.isNaN(parsedDate.getTime())) {
+        return "";
+    }
 
+    return parsedDate.toLocaleDateString();
 }
 
 
-// ===============================
-// Escape HTML
-// ===============================
+// ================================================================
+// ESCAPE HTML
+// ------------------------------------------------
+// Prevent HTML injection when inserting API data.
+// ================================================================
 
 function escapeHtml(value) {
 
@@ -503,12 +677,11 @@ function escapeHtml(value) {
         .replace(/"/g, "&quot;")
 
         .replace(/'/g, "&#039;");
-
 }
 
 
-// ===============================
-// Start
-// ===============================
+// ================================================================
+// START APPLICATION
+// ================================================================
 
-getNotes();
+initializeDashboard();
