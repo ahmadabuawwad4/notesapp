@@ -1,12 +1,20 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <script>
+      if(!sessionStorage.getItem("token")){
+        location.href = "./login.html"
+      }
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Notes Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="../styles/dashboard.css" />
   </head>
   <body>
@@ -14,18 +22,40 @@
       <!-- Sidebar -->
       <aside id="sidebar" class="sidebar" data-component="sidebar">
         <div class="sidebar__logo">
-          <img class="sidebar__logo-image" src="../assets/NotesAppLogo.png" alt="Notes Logo" />
+          <img
+            class="sidebar__logo-image"
+            src="../assets/NotesAppLogo.png"
+            alt="Notes Logo"
+          />
           <span class="sidebar__logo-text">Notes</span>
         </div>
-        <nav class="sidebar__navigation" aria-label="Main navigation" data-component="navigation">
-          <a href="#" class="nav-item nav-item--active" data-path="dashboard" aria-current="page">
-            <span class="material-symbols-outlined nav-item__icon">description</span>
+        <nav
+          class="sidebar__navigation"
+          aria-label="Main navigation"
+          data-component="navigation"
+        >
+          <a
+            href="#"
+            class="nav-item nav-item--active"
+            data-path="dashboard"
+            aria-current="page"
+          >
+            <span class="material-symbols-outlined nav-item__icon"
+              >description</span
+            >
             <span class="nav-item__label">All Notes</span>
           </a>
         </nav>
         <div class="sidebar__footer">
           <div class="logout-container">
-            <button id="logoutButton" class="icon-button icon-button--logout" type="button" title="Log out" aria-label="Log out" data-action="logout">
+            <button
+              id="logoutButton"
+              class="icon-button icon-button--logout"
+              type="button"
+              title="Log out"
+              aria-label="Log out"
+              data-action="logout"
+            >
               <span class="material-symbols-outlined">logout</span>
             </button>
           </div>
@@ -41,46 +71,90 @@
               <div class="dashboard-header__top">
                 <div class="page-heading">
                   <h1 class="page-heading__title">My Notes</h1>
-                  <p class="page-heading__description">Keep your thoughts, ideas, and tasks organized.</p>
+                  <p class="page-heading__description">
+                    Keep your thoughts, ideas, and tasks organized.
+                  </p>
                 </div>
-                <button id="newNoteButton" class="button button--primary" type="button" data-action="create-note">
-                  <span class="material-symbols-outlined button__icon">add</span>
+                <button
+                  id="newNoteButton"
+                  class="button button--primary"
+                  type="button"
+                  data-action="create-note"
+                >
+                  <span class="material-symbols-outlined button__icon"
+                    >add</span
+                  >
                   <span>New Note</span>
                 </button>
               </div>
               <div class="notes-filter" data-component="notes-filter">
-                <button id="allNotesFilter" class="filter-button filter-button--active" type="button" data-filter="all">
+                <button
+                  id="allNotesFilter"
+                  class="filter-button filter-button--active"
+                  type="button"
+                  data-filter="all"
+                >
                   All Notes <span id="notesCount">0</span>
                 </button>
               </div>
             </section>
 
             <!-- States -->
-            <section id="loadingState" class="state state--loading" data-state="loading" aria-live="polite">
+            <section
+              id="loadingState"
+              class="state state--loading"
+              data-state="loading"
+              aria-live="polite"
+            >
               <div class="loading-content">
                 <span class="loading-spinner"></span>
                 <span class="loading-message">Loading notes...</span>
               </div>
             </section>
-            
-            <section id="errorState" class="state state--error is-hidden" data-state="error" aria-live="assertive">
+
+            <section
+              id="errorState"
+              class="state state--error is-hidden"
+              data-state="error"
+              aria-live="assertive"
+            >
               <p class="error-message">Failed to load notes.</p>
             </section>
 
             <!-- Notes Grid -->
-            <section id="notesGrid" class="notes-grid is-hidden" data-component="notes-grid" aria-label="Notes">
+            <section
+              id="notesGrid"
+              class="notes-grid is-hidden"
+              data-component="notes-grid"
+              aria-label="Notes"
+            >
               <!-- Dynamically populated -->
             </section>
 
             <!-- Empty State -->
-            <section id="emptyState" class="empty-state is-hidden" data-state="empty">
+            <section
+              id="emptyState"
+              class="empty-state is-hidden"
+              data-state="empty"
+            >
               <div class="empty-state__content">
                 <div class="empty-state__illustration">
                   <div class="empty-state__illustration-background"></div>
                   <div class="empty-state__illustration-icon">
-                    <svg class="empty-state__svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                    <svg
+                      class="empty-state__svg"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.8"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
                       <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                      <path
+                        d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"
+                      ></path>
                       <line x1="9" x2="15" y1="7" y2="7"></line>
                       <line x1="9" x2="15" y1="11" y2="11"></line>
                       <line x1="9" x2="12" y1="15" y2="15"></line>
@@ -88,9 +162,19 @@
                   </div>
                 </div>
                 <h2 class="empty-state__title">No notes yet</h2>
-                <p class="empty-state__description">Create your first note and start organizing your ideas, project tasks, and knowledge.</p>
-                <button id="emptyStateCreateButton" class="button button--primary" type="button" data-action="create-note">
-                  <span class="material-symbols-outlined button__icon">add</span>
+                <p class="empty-state__description">
+                  Create your first note and start organizing your ideas,
+                  project tasks, and knowledge.
+                </p>
+                <button
+                  id="emptyStateCreateButton"
+                  class="button button--primary"
+                  type="button"
+                  data-action="create-note"
+                >
+                  <span class="material-symbols-outlined button__icon"
+                    >add</span
+                  >
                   <span>Create Note</span>
                 </button>
               </div>

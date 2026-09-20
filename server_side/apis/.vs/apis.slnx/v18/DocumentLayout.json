@@ -1,14 +1,14 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\2025\\OneDrive\\Desktop\\NotesApp\\server_side\\apis\\",
+  "WorkspaceRootPath": "C:\\Users\\2025\\OneDrive\\Desktop\\NotesApp\\application\\server_side\\apis\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{5A929D2C-82F4-0CFF-17FE-88F05509E3C2}|apis.csproj|c:\\users\\2025\\onedrive\\desktop\\notesapp\\server_side\\apis\\controllers\\notecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5A929D2C-82F4-0CFF-17FE-88F05509E3C2}|apis.csproj|solutionrelative:controllers\\notecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{5A929D2C-82F4-0CFF-17FE-88F05509E3C2}|apis.csproj|c:\\users\\2025\\onedrive\\desktop\\notesapp\\application\\server_side\\apis\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5A929D2C-82F4-0CFF-17FE-88F05509E3C2}|apis.csproj|solutionrelative:controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5A929D2C-82F4-0CFF-17FE-88F05509E3C2}|apis.csproj|c:\\users\\2025\\onedrive\\desktop\\notesapp\\server_side\\apis\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5A929D2C-82F4-0CFF-17FE-88F05509E3C2}|apis.csproj|solutionrelative:controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{5A929D2C-82F4-0CFF-17FE-88F05509E3C2}|apis.csproj|c:\\users\\2025\\onedrive\\desktop\\notesapp\\application\\server_side\\apis\\controllers\\notecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5A929D2C-82F4-0CFF-17FE-88F05509E3C2}|apis.csproj|solutionrelative:controllers\\notecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 9,
           "Children": [
             {
               "$type": "Bookmark",
@@ -54,26 +54,26 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "NoteController.cs",
-              "DocumentMoniker": "C:\\Users\\2025\\OneDrive\\Desktop\\NotesApp\\server_side\\apis\\Controllers\\NoteController.cs",
+              "DocumentMoniker": "C:\\Users\\2025\\OneDrive\\Desktop\\NotesApp\\application\\server_side\\apis\\Controllers\\NoteController.cs",
               "RelativeDocumentMoniker": "Controllers\\NoteController.cs",
-              "ToolTip": "C:\\Users\\2025\\OneDrive\\Desktop\\NotesApp\\server_side\\apis\\Controllers\\NoteController.cs",
+              "ToolTip": "C:\\Users\\2025\\OneDrive\\Desktop\\NotesApp\\application\\server_side\\apis\\Controllers\\NoteController.cs",
               "RelativeToolTip": "Controllers\\NoteController.cs",
-              "ViewState": "AgIAACYAAAAAAAAAAAA5wE0AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFYAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-09-14T15:16:07.376Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "UserController.cs",
-              "DocumentMoniker": "C:\\Users\\2025\\OneDrive\\Desktop\\NotesApp\\server_side\\apis\\Controllers\\UserController.cs",
+              "DocumentMoniker": "C:\\Users\\2025\\OneDrive\\Desktop\\NotesApp\\application\\server_side\\apis\\Controllers\\UserController.cs",
               "RelativeDocumentMoniker": "Controllers\\UserController.cs",
-              "ToolTip": "C:\\Users\\2025\\OneDrive\\Desktop\\NotesApp\\server_side\\apis\\Controllers\\UserController.cs",
+              "ToolTip": "C:\\Users\\2025\\OneDrive\\Desktop\\NotesApp\\application\\server_side\\apis\\Controllers\\UserController.cs",
               "RelativeToolTip": "Controllers\\UserController.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAYwA4AAAA3AAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAAAYwCMAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-09-14T10:03:56.25Z",
               "EditorCaption": ""

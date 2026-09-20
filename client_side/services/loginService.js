@@ -1,35 +1,30 @@
-const domain = "http://notesapp.tryasp.net";
+import { domain, apiFetch } from "./apiFetch.js";
 const endpoint = "/api/Auth/login";
 
 export async function Login(email, password) {
   const url = new URL(endpoint, domain);
+  const reqBody = {
+    email: email,
+    password: password,
+  };
+
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify(reqBody),
+  };
 
   try {
-    const response = await fetch(url, {
-      method: "POST",
+    const data = await apiFetch(url, options);
 
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    });
-
-    if (!response.ok) {
+    if (!data.token) {
       return false;
     }
 
-    const result = await response.json();
-
-    if (!result.token) {
-      return false;
-    }
-
-    sessionStorage.setItem("token", result.token);
+    sessionStorage.setItem("token", data.token);
 
     return true;
   } catch (error) {

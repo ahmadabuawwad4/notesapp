@@ -1,36 +1,30 @@
-const domain = "http://notesapp.tryasp.net";
+import { domain, apiFetch } from "./apiFetch.js";
 
-export async function registration(FullName,Email, Password) {
+export async function registration(FullName, Email, Password) {
   const endpoint = "/api/User/Register";
   const url = new URL(endpoint, domain);
+  const options = {
+    method: "POST",
+
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+
+    body: JSON.stringify({
+      fullName: FullName,
+      email: Email,
+      password: Password,
+    }),
+  };
 
   try {
-    const response = await fetch(url, {
-      method: "POST",
+    const data = await apiFetch(url, options);
 
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-
-      body: JSON.stringify({
-        fullName: FullName,
-        email: Email,
-        password: Password,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    return JSON.parse(await response.text());
-     
-
+    return data.UserId ? true : false;
   } catch (error) {
-    result = `Failed: ${error.message}`;
-    console.log(result);
-    return result
+    console.error(`Failed: ${error.message}`);
+    return false;
   }
-
+  
 }

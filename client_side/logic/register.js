@@ -1,113 +1,179 @@
-import {registration} from "../services/registrationService.js";
+import { registration } from "../services/registrationService.js";
 
+// =========================================================
+// DOM Elements
+// =========================================================
 
-const fullName = document.getElementById("full-name");
-const email = document.getElementById("email");
-const password = document.getElementById("password");
-const con_password = document.getElementById("confirm-password");
+const form = document.getElementById("register-form");
+
+const fullNameInput = document.getElementById("full-name");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const confirmPasswordInput = document.getElementById("confirm-password");
+
 const submitBtn = document.getElementById("submitBtn");
 
-(function () {
-          const passwordInput = password;
-          const togglePasswordBtn = document.getElementById("toggle-password");
-          const togglePasswordIcon = document.getElementById(
-            "toggle-password-icon",
-          );
+const togglePasswordBtn = document.getElementById("toggle-password");
+const togglePasswordIcon = document.getElementById("toggle-password-icon");
 
-          const confirmPasswordInput = con_password
-          const toggleConfirmBtn = document.getElementById(
-            "toggle-confirm-password",
-          );
-          const toggleConfirmIcon = document.getElementById(
-            "toggle-confirm-icon",
-          );
+const toggleConfirmBtn = document.getElementById("toggle-confirm-password");
+const toggleConfirmIcon = document.getElementById("toggle-confirm-icon");
 
-          const bar1 = document.getElementById("bar-1");
-          const bar2 = document.getElementById("bar-2");
-          const bar3 = document.getElementById("bar-3");
-          const strengthLabel = document.getElementById("strength-label");
+const bar1 = document.getElementById("bar-1");
+const bar2 = document.getElementById("bar-2");
+const bar3 = document.getElementById("bar-3");
 
-          function toggleVisibility(input, icon) {
-            if (input.type === "password") {
-              input.type = "text";
-              icon.textContent = "visibility_off";
-            } else {
-              input.type = "password";
-              icon.textContent = "visibility";
-            }
-          }
+const strengthLabel = document.getElementById("strength-label");
 
-          if (togglePasswordBtn && passwordInput) {
-            togglePasswordBtn.addEventListener("click", () => {
-              toggleVisibility(passwordInput, togglePasswordIcon);
-            });
-          }
+// =========================================================
+// Password Visibility
+// =========================================================
 
-          if (toggleConfirmBtn && confirmPasswordInput) {
-            toggleConfirmBtn.addEventListener("click", () => {
-              toggleVisibility(confirmPasswordInput, toggleConfirmIcon);
-            });
-          }
+function togglePasswordVisibility(input, button, icon) {
+  const isPassword = input.type === "password";
 
-          if (passwordInput) {
-            passwordInput.addEventListener("input", (e) => {
-              const val = e.target.value;
-              if (val.length === 0) {
-                bar1.className =
-                  "h-full rounded-full bg-secondary-container transition-all duration-300";
-                bar2.className =
-                  "h-full rounded-full bg-secondary-container transition-all duration-300";
-                bar3.className =
-                  "h-full rounded-full bg-secondary-container transition-all duration-300";
-                strengthLabel.textContent = "Enter password";
-                strengthLabel.className = "text-secondary font-semibold";
-              } else if (val.length < 6) {
-                bar1.className =
-                  "h-full rounded-full bg-error transition-all duration-300";
-                bar2.className =
-                  "h-full rounded-full bg-secondary-container transition-all duration-300";
-                bar3.className =
-                  "h-full rounded-full bg-secondary-container transition-all duration-300";
-                strengthLabel.textContent = "Weak";
-                strengthLabel.className = "text-error font-semibold";
-              } else if (val.length < 10) {
-                bar1.className =
-                  "h-full rounded-full bg-primary-container transition-all duration-300";
-                bar2.className =
-                  "h-full rounded-full bg-primary-container transition-all duration-300";
-                bar3.className =
-                  "h-full rounded-full bg-secondary-container transition-all duration-300";
-                strengthLabel.textContent = "Medium";
-                strengthLabel.className =
-                  "text-primary-container font-semibold";
-              } else {
-                bar1.className =
-                  "h-full rounded-full bg-primary transition-all duration-300";
-                bar2.className =
-                  "h-full rounded-full bg-primary transition-all duration-300";
-                bar3.className =
-                  "h-full rounded-full bg-primary transition-all duration-300";
-                strengthLabel.textContent = "Strong password";
-                strengthLabel.className = "text-primary font-semibold";
-              }
-            });
-          }
+  input.type = isPassword ? "text" : "password";
 
-          submitBtn.addEventListener("click",async(event)=>{
-            event.preventDefault();
-            const User = await registration(fullName.value,email.value,password.value);
-            
-            console.log(User.userId);
-            
-            if(User.userId>0){
-              window.location.href = "../index.html"
-            }
-            else
-              alert("Try!");
-            })
+  icon.textContent = isPassword ? "visibility_off" : "visibility";
 
-        })();
+  button.setAttribute("aria-pressed", String(isPassword));
+}
 
+// =========================================================
+// Password Strength
+// =========================================================
 
+function resetStrengthBars() {
+  bar1.classList.remove("is-inactive");
+  bar2.classList.remove("is-inactive");
+  bar3.classList.remove("is-inactive");
+}
 
+function setWeakPassword() {
+  resetStrengthBars();
 
+  bar2.classList.add("is-inactive");
+  bar3.classList.add("is-inactive");
+
+  bar1.style.backgroundColor = "#ba1a1a";
+
+  strengthLabel.textContent = "Weak";
+  strengthLabel.style.color = "#ba1a1a";
+}
+
+function setMediumPassword() {
+  resetStrengthBars();
+
+  bar3.classList.add("is-inactive");
+
+  bar1.style.backgroundColor = "#4f46e5";
+  bar2.style.backgroundColor = "#4f46e5";
+
+  strengthLabel.textContent = "Medium";
+  strengthLabel.style.color = "#4f46e5";
+}
+
+function setStrongPassword() {
+  resetStrengthBars();
+
+  bar1.style.backgroundColor = "#3525cd";
+  bar2.style.backgroundColor = "#3525cd";
+  bar3.style.backgroundColor = "#3525cd";
+
+  strengthLabel.textContent = "Strong password";
+  strengthLabel.style.color = "#3525cd";
+}
+
+function resetPasswordStrength() {
+  resetStrengthBars();
+
+  bar1.style.backgroundColor = "";
+  bar2.style.backgroundColor = "";
+  bar3.style.backgroundColor = "";
+
+  strengthLabel.textContent = "Enter password";
+  strengthLabel.style.color = "";
+}
+
+function updatePasswordStrength(password) {
+  if (password.length === 0) {
+    resetPasswordStrength();
+    return;
+  }
+
+  if (password.length < 6) {
+    setWeakPassword();
+    return;
+  }
+
+  if (password.length < 10) {
+    setMediumPassword();
+    return;
+  }
+
+  setStrongPassword();
+}
+
+// =========================================================
+// Register
+// =========================================================
+
+async function handleRegister(event) {
+  event.preventDefault();
+
+  const fullName = fullNameInput.value.trim();
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+  const confirmPassword = confirmPasswordInput.value;
+
+  if (password !== confirmPassword) {
+    alert("Passwords do not match.");
+    return;
+  }
+
+  try {
+    submitBtn.disabled = true;
+
+    const user = await registration(fullName, email, password);
+
+    console.log(user.userId);
+
+    if (user.userId > 0) {
+      window.location.href = "../index.html";
+      return;
+    }
+
+    alert("Registration failed. Please try again.");
+  } catch (error) {
+    console.error("Registration error:", error);
+    alert("Something went wrong. Please try again.");
+  } finally {
+    submitBtn.disabled = false;
+  }
+}
+
+// =========================================================
+// Event Listeners
+// =========================================================
+
+togglePasswordBtn.addEventListener("click", () => {
+  togglePasswordVisibility(
+    passwordInput,
+    togglePasswordBtn,
+    togglePasswordIcon,
+  );
+});
+
+toggleConfirmBtn.addEventListener("click", () => {
+  togglePasswordVisibility(
+    confirmPasswordInput,
+    toggleConfirmBtn,
+    toggleConfirmIcon,
+  );
+});
+
+passwordInput.addEventListener("input", () => {
+  updatePasswordStrength(passwordInput.value);
+});
+
+form.addEventListener("submit", handleRegister);

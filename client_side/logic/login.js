@@ -81,7 +81,7 @@ async function triggerSubmit() {
 
         setTimeout(() => {
             window.location.href = "./dashboard.html";
-        }, 900);
+        }, 450);
 
     } catch (error) {
         console.error("Login failed:", error);

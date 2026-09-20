@@ -1,189 +1,130 @@
-const token = sessionStorage.getItem("token");
-const domain = "http://notesapp.tryasp.net";
+import { domain, apiFetch } from "./apiFetch.js";
 
+const token = sessionStorage.getItem("token");
+const addNote_endpoint = "/api/Note/AddNote";
+const delNote_endpoint = "/api/Note/DeleteNote";
+const getAll_endpoint = "/api/Note/GetAllNotes";
+const get_endpoint = "/api/Note/GetNote";
+const edit_endpoint = "/api/Note/EditNote";
 
 export async function addNote(newNote) {
+  const url = new URL(addNote_endpoint, domain);
 
-    let result = "";
-    const endpoint = "/api/Note/AddNote";
+  const options = {
+    method: "POST",
 
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(newNote),
+  };
 
-    let url = new URL(endpoint, domain);
-
-
-    try {
-
-        const response = await fetch(url, {
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body:JSON.stringify(newNote)
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-
-        await response.text();
-        return true;
-
-    } catch (error) {
-
-        console.log(`Failed: ${error.message}`);
-        return false;
-
-    }
-
-    return result;
+  try {
+    const data = await apiFetch(url, options);
+    if (data.id > 0) return true;
+  } catch (error) {
+    console.log(`Failed: ${error.message}`);
+    return false;
+  }
 }
 
 export async function deleteNote(noteId) {
+  let url = new URL(delNote_endpoint, domain);
+  url.searchParams.set("noteId", noteId);
 
-    const endpoint = "/api/Note/DeleteNote";
+  const options = {
+    method: "DELETE",
 
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
-    let url = new URL(endpoint, domain);
-    url.searchParams.set("noteId",noteId);
+  try {
+    const deleted = await apiFetch(url, options, "text");
 
-
-    try {
-
-        const response = await fetch(url, {
-            method: "DELETE",
-
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "Authorization": `Bearer ${token}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-
-        await response.text();
-        return true;
-
-    } catch (error) {
-
-        console.error(`Failed: ${error.message}`);
-        return false
-
-    }
-
+    return deleted;
+  } catch (error) {
+    console.error(`Failed: ${error.message}`);
+    return false;
+  }
 }
 
 export async function loadNotes() {
+  const url = new URL(getAll_endpoint, domain);
+  const options = {
+    method: "GET",
 
-    let result = "";
-    const endpoint = "/api/Note/GetAllNotes";
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
+  try {
+    const data = await apiFetch(url, options);
 
-    let url = new URL(endpoint, domain);
+    return data;
+  } catch (error) {
+    console.error(`Failed: ${error.message}`);
+    return null;
+  }
 
-
-    try {
-
-        const response = await fetch(url, {
-            method: "GET",
-
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "Authorization": `Bearer ${token}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-
-        result = await response.json();
-
-    } catch (error) {
-
-        result = `Failed: ${error.message}`;
-
-    }
-
-    return result;
+  return result;
 }
 
 export async function loadNote(id) {
+  let url = new URL(get_endpoint, domain);
+  url.searchParams.set("noteId", id);
 
-    let result = "";
-    const endpoint = "/api/Note/GetNote";
+  const options = {
+    method: "GET",
 
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
-    let url = new URL(endpoint, domain);
-    url.searchParams.set("noteId",id);
+  try {
+    const data = await apiFetch(url, options);
 
-
-    try {
-
-        const response = await fetch(url, {
-            method: "GET",
-
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "Authorization": `Bearer ${token}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-
-        result = await response.json();
-
-    } catch (error) {
-
-        result = `Failed: ${error.message}`;
-
-    }
-
-    return result;
+    return data;
+  } catch (error) {
+    console.error(`Failed: ${error.message}`);
+    return null;
+  }
 }
 
 
 export async function editNote(editedNote) {
-    let result = "";
-    const endpoint = "/api/Note/EditNote";
 
+  const url = new URL(edit_endpoint, domain);
+  const options = {
+      method: "PUT",
 
-    let url = new URL(endpoint, domain);
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(editedNote)
+    };
 
-    try {
+  try {
+    const updated = await apiFetch(url, options,"text");
+    return updated;
 
-        const response = await fetch(url, {
-            method: "PUT",
+  } catch (error) {
+    console.error(`Failed: ${error.message}`);
+    return false;
+  }
 
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body:JSON.stringify(editedNote)
-
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-
-        result = await response.json();
-
-    } catch (error) {
-
-        result = `Failed: ${error.message}`;
-
-    }
-
-    return result;
 }
+
