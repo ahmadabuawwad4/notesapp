@@ -139,7 +139,8 @@ async function handleRegister(event) {
     console.log(user.userId);
 
     if (user.userId > 0) {
-      window.location.href = "../index.html";
+      alert("Registration successfully.");
+      window.location.href = "../pages/login.html";
       return;
     }
 

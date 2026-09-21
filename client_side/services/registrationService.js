@@ -21,10 +21,10 @@ export async function registration(FullName, Email, Password) {
   try {
     const data = await apiFetch(url, options);
 
-    return data.UserId ? true : false;
+    return data ? data : null;
   } catch (error) {
     console.error(`Failed: ${error.message}`);
-    return false;
+    return null;
   }
   
 }
