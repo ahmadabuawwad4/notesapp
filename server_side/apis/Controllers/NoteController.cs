@@ -108,4 +108,18 @@ public class NotesController : ControllerBase
 
         return Ok(deleted);
     }
+
+    [HttpPost("ImproveNote", Name = "ImproveNote")]
+    public async Task<IActionResult> ImproveNote(NoteContentDto dto, [FromServices] IAuthorizationService authorizationService)
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var authResult = await authorizationService.AuthorizeAsync(User, userId, "UserOwner");
+
+        if (!authResult.Succeeded)
+            return Forbid(); // 403
+
+        string improvedContent = await _noteService.ImproveNote(dto.noteContent ?? "");
+
+        return Ok(improvedContent);
+    }
 }

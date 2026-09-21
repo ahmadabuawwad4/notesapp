@@ -95,6 +95,23 @@
     "EndpointName": "GetNote"
   },
   {
+    "ContainingType": "NotesController",
+    "Method": "ImproveNote",
+    "RelativePath": "api/Note/ImproveNote",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "application.DTOs.NoteContentDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "ImproveNote"
+  },
+  {
     "ContainingType": "apis.Controllers.UserController",
     "Method": "register",
     "RelativePath": "api/User/Register",

@@ -159,6 +159,38 @@
         }
       }
     },
+    "/api/Note/ImproveNote": {
+      "post": {
+        "tags": [
+          "Notes"
+        ],
+        "operationId": "ImproveNote",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NoteContentDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NoteContentDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NoteContentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/User/Register": {
       "post": {
         "tags": [
@@ -210,6 +242,16 @@
           },
           "isArchived": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NoteContentDto": {
+        "type": "object",
+        "properties": {
+          "noteContent": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

@@ -1,4 +1,9 @@
-import { addNote, loadNote, editNote } from "../services/noteServices.js";
+import {
+  addNote,
+  loadNote,
+  editNote,
+  improveNote,
+} from "../services/noteServices.js";
 
 // ==========================================
 // DOM Elements
@@ -16,6 +21,8 @@ const discard = document.getElementById("discardBtn");
 const cancelBtn = document.getElementById("cancelActionBtn");
 
 const message = document.getElementById("message");
+
+const improveBtn = document.getElementById("improveBtn");
 
 // ==========================================
 // State
@@ -163,6 +170,24 @@ async function loadCurrentNote() {
 }
 
 // ==========================================
+// Improve Note
+// ==========================================
+
+async function ImproveNote() {
+  try {
+    const content = editor.value.trim();
+
+    let result = await improveNote(content);
+    editor.value = result
+      .replace(/^"|"$/g, "")
+      .replace(/\\n/g, "\n")
+      .replace(/\\"/g, '"');
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// ==========================================
 // Events
 // ==========================================
 
@@ -175,6 +200,8 @@ topSave.addEventListener("click", () => {
 discard.addEventListener("click", handleDelete);
 
 cancelBtn.addEventListener("click", handleCancel);
+
+improveBtn.addEventListener("click", ImproveNote);
 
 // ==========================================
 // Initialize

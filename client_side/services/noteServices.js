@@ -6,6 +6,7 @@ const delNote_endpoint = "/api/Note/DeleteNote";
 const getAll_endpoint = "/api/Note/GetAllNotes";
 const get_endpoint = "/api/Note/GetNote";
 const edit_endpoint = "/api/Note/EditNote";
+const improve_endpoint = "/api/Note/ImproveNote";
 
 export async function addNote(newNote) {
   const url = new URL(addNote_endpoint, domain);
@@ -104,27 +105,50 @@ export async function loadNote(id) {
 
 
 export async function editNote(editedNote) {
-
+  
   const url = new URL(edit_endpoint, domain);
   const options = {
-      method: "PUT",
+    method: "PUT",
 
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(editedNote)
-    };
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(editedNote),
+  };
 
   try {
     const updated = await apiFetch(url, options,"text");
-    return updated;
+    return updated === "true";
+  } 
+  catch (error) {
+    console.error(`Failed: ${error.message}`);
+    return false;
+  }
+}
 
+export async function improveNote(Content) {
+  const url = new URL(improve_endpoint, domain);
+
+  const options = {
+    method: "POST",
+
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body:JSON.stringify({
+      noteContent : Content
+    })
+  };
+
+  try {
+    const improvedContent = await apiFetch(url, options, "text");
+    return improvedContent;
   } catch (error) {
     console.error(`Failed: ${error.message}`);
     return false;
   }
-
 }
-

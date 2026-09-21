@@ -20,5 +20,7 @@ namespace application.Services.NoteServices
 
         Task<bool> DeleteAsync(int noteId);
 
+        Task<string> ImproveNote(string noteContent);
+
     }
 }

@@ -71,5 +71,13 @@ namespace application.Services.NoteServices
 
             return await _noteRepository.DeleteAsync(noteId);
         }
+
+        public async Task<string> ImproveNote(
+            string noteContent)
+        {
+            
+            return await AIServices.ImproveNoteByAiAsync(noteContent);
+
+        }
     }
 }
